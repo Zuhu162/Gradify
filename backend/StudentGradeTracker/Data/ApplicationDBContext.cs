@@ -12,5 +12,21 @@ namespace StudentGradeTracker.Data
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<StudentAssignment> StudentAssignments { get; set; }
         public DbSet<Submission> Submissions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+            // Configure Many-to-Many Relationship: Student ↔ Assignments
+            modelBuilder.Entity<StudentAssignment>()
+                .HasKey(sa => new { sa.StudentId, sa.AssignmentId });  // Composite Primary Key
+
+            modelBuilder.Entity<StudentAssignment>()
+                .HasOne(sa => sa.Student)
+                .WithMany(s => s.StudentAssignments)
+                .HasForeignKey(sa => sa.StudentId);
+
+            modelBuilder.Entity<StudentAssignment>()
+                .HasOne(sa => sa.Assignment)
+                .WithMany(a => a.StudentAssignments)
+                .HasForeignKey(sa => sa.AssignmentId);
+        }
     }
 }
