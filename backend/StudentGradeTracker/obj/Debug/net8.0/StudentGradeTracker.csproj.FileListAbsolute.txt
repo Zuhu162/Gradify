@@ -77,3 +77,4 @@ D:\Projects 2025\StudentGradeTracker\backend\StudentGradeTracker\obj\Debug\net8.
 D:\Projects 2025\StudentGradeTracker\backend\StudentGradeTracker\obj\Debug\net8.0\StudentGradeTracker.genruntimeconfig.cache
 D:\Projects 2025\StudentGradeTracker\backend\StudentGradeTracker\obj\Debug\net8.0\ref\StudentGradeTracker.dll
 D:\Projects 2025\StudentGradeTracker\backend\StudentGradeTracker\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\Projects 2025\StudentGradeTracker\backend\StudentGradeTracker\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
