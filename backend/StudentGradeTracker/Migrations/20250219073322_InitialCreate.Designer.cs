@@ -12,8 +12,8 @@ using StudentGradeTracker.Data;
 namespace StudentGradeTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250218181732_RemoveTeacherSubjects")]
-    partial class RemoveTeacherSubjects
+    [Migration("20250219073322_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,28 +52,6 @@ namespace StudentGradeTracker.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Assignments");
-                });
-
-            modelBuilder.Entity("StudentGradeTracker.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("StudentGradeTracker.Models.StudentAssignment", b =>
@@ -129,13 +107,17 @@ namespace StudentGradeTracker.Migrations
                     b.ToTable("Submissions");
                 });
 
-            modelBuilder.Entity("StudentGradeTracker.Models.Teacher", b =>
+            modelBuilder.Entity("StudentGradeTracker.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -148,7 +130,25 @@ namespace StudentGradeTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Users");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("StudentGradeTracker.Models.Student", b =>
+                {
+                    b.HasBaseType("StudentGradeTracker.Models.User");
+
+                    b.HasDiscriminator().HasValue("Student");
+                });
+
+            modelBuilder.Entity("StudentGradeTracker.Models.Teacher", b =>
+                {
+                    b.HasBaseType("StudentGradeTracker.Models.User");
+
+                    b.HasDiscriminator().HasValue("Teacher");
                 });
 
             modelBuilder.Entity("StudentGradeTracker.Models.Assignment", b =>
@@ -167,13 +167,13 @@ namespace StudentGradeTracker.Migrations
                     b.HasOne("StudentGradeTracker.Models.Assignment", "Assignment")
                         .WithMany("StudentAssignments")
                         .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("StudentGradeTracker.Models.Student", "Student")
                         .WithMany("StudentAssignments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Assignment");
@@ -186,13 +186,13 @@ namespace StudentGradeTracker.Migrations
                     b.HasOne("StudentGradeTracker.Models.Assignment", "Assignment")
                         .WithMany()
                         .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("StudentGradeTracker.Models.Student", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Assignment");

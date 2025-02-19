@@ -14,17 +14,15 @@ namespace StudentGradeTracker.Models
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        private string PasswordHash { get; set; } = string.Empty;  // Hidden password
+        public string PasswordHash { get; set; } = string.Empty;  // Hidden password
 
-        public void SetPassword(string password)
-        {
-            PasswordHash = HashPassword(password);  // Store hashed password
+        public void SetPassword(string password){
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);  
         }
 
-        private string HashPassword(string password)
+        public bool VerifyPassword(string password)
         {
-            // Simple hashing (Replace with BCrypt in production)
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+            return BCrypt.Net.BCrypt.Verify(password, PasswordHash);
         }
     }
 }
