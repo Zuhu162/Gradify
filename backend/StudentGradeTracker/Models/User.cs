@@ -24,5 +24,9 @@ namespace StudentGradeTracker.Models
         {
             return BCrypt.Net.BCrypt.Verify(password, PasswordHash);
         }
+
+        // Navigation properties
+        public List<StudentAssignment> StudentAssignments { get; set; } = new List<StudentAssignment>(); // Add this
+        public List<Assignment> Assignments { get; set; } = new List<Assignment>(); // For teachers
     }
 }

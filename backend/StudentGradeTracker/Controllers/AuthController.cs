@@ -22,24 +22,26 @@ namespace StudentGradeTracker.Controllers
         [HttpPost("register/{userType}")]
         public IActionResult Register(string userType, [FromBody] RegisterRequest request)
         {
-            if (userType.ToLower() != "student" && userType.ToLower() != "teacher")
-                return BadRequest("Invalid user type. Must be 'student' or 'teacher'.");
+            // Using Enum to validate user types
+            if (!Enum.TryParse(userType, true, out UserRole role))
+                return BadRequest("Invalid user type.");
 
             var existingUser = _context.Users.FirstOrDefault(u => u.Email == request.Email);
             if (existingUser != null)
                 return BadRequest("Email already exists.");
 
-            User newUser;
-            if (userType.ToLower() == "student")
-                newUser = new Student { Name = request.Name, Email = request.Email };
-            else
-                newUser = new Teacher { Name = request.Name, Email = request.Email };
+            User newUser = role switch
+            {
+                UserRole.Student => new Student { Name = request.Name, Email = request.Email },
+                UserRole.Teacher => new Teacher { Name = request.Name, Email = request.Email },
+                _ => throw new ArgumentException("Invalid role")  // Future-proofing
+            };
 
             newUser.SetPassword(request.Password);
             _context.Users.Add(newUser);
             _context.SaveChanges();
 
-            return Ok($"{userType} registered successfully.");
+            return Ok($"{role} registered successfully.");
         }
 
         [HttpPost("login/{userType}")]
@@ -48,30 +50,28 @@ namespace StudentGradeTracker.Controllers
             if (userType.ToLower() != "student" && userType.ToLower() != "teacher")
                 return BadRequest("Invalid user type. Must be 'student' or 'teacher'.");
 
-            User? user = userType.ToLower() == "student"
-                ? _context.Students.FirstOrDefault(u => u.Email == request.Email)
-                : _context.Teachers.FirstOrDefault(u => u.Email == request.Email);
+            User? user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
 
             if (user == null || !user.VerifyPassword(request.Password))
             {
                 return Unauthorized("Invalid email or password.");
             }
 
-            var token = _jwtHelper.GenerateToken(user.Email, userType);
+            // 🔹 Now passing `user.Id` along with `Email` and `Role`
+            var token = _jwtHelper.GenerateToken(user.Id, user.Email, userType);
             return Ok(new { Token = token });
         }
     }
-
     public class RegisterRequest
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 
     public class LoginRequest
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    } 
 }

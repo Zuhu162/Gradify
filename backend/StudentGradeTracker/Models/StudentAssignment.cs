@@ -2,8 +2,9 @@ namespace StudentGradeTracker.Models
 {
     public class StudentAssignment
     {
-        public int StudentId { get; set; }  // Foreign Key
-        public Student Student { get; set; }  // Navigation Property
+        // Replace StudentId with UserId
+        public int UserId { get; set; }  // Foreign Key (References Users table)
+        public User User { get; set; }  // Navigation Property (Student)
 
         public int AssignmentId { get; set; }  // Foreign Key
         public Assignment Assignment { get; set; }  // Navigation Property

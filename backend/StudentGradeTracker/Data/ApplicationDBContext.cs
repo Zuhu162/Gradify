@@ -17,13 +17,13 @@ namespace StudentGradeTracker.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<StudentAssignment>()
-                .HasKey(sa => new { sa.StudentId, sa.AssignmentId });
+            .HasKey(sa => new { sa.UserId, sa.AssignmentId });
 
             modelBuilder.Entity<StudentAssignment>()
-                .HasOne(sa => sa.Student)
-                .WithMany(s => s.StudentAssignments)
-                .HasForeignKey(sa => sa.StudentId)
-                .OnDelete(DeleteBehavior.NoAction);  // ❌ No Cascade Delete
+            .HasOne(sa => sa.User)
+            .WithMany(u => u.StudentAssignments)
+            .HasForeignKey(sa => sa.UserId) // Change StudentId → UserId
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<StudentAssignment>()
                 .HasOne(sa => sa.Assignment)

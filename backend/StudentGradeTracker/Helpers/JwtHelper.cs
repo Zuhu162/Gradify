@@ -14,18 +14,21 @@ namespace StudentGradeTracker.Helpers
             _configuration = configuration;
         }
 
-        public string GenerateToken(string email, string role)
+        public string GenerateToken(int userId, string email, string role)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
             var tokenHandler = new JwtSecurityTokenHandler();
 
+            var claims = new List<Claim>
+            {
+                new Claim("UserId", userId.ToString()), // Store UserId instead of TeacherId/StudentId
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Role, char.ToUpper(role[0]) + role.Substring(1).ToLower()) 
+            };
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, role)
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(3),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _configuration["JwtSettings:Issuer"],
