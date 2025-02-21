@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentGradeTracker.Data;
 using StudentGradeTracker.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudentGradeTracker.Controllers{
     [Route("api/assignments")]
@@ -25,6 +26,47 @@ namespace StudentGradeTracker.Controllers{
             _context.SaveChanges();
             return Ok(assignment);
         }
+
+        
+        [HttpPatch("{assignmentId}/add-students")]
+        [Authorize(Roles = "Teacher")]
+        public IActionResult AddStudentsToAssignment(int assignmentId, [FromBody] List<int> studentIds)
+        {
+            // Get the authenticated teacher's UserId from JWT
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Fetch the assignment
+            var assignment = _context.Assignments.FirstOrDefault(a => a.Id == assignmentId && a.UserId == userId);
+            if (assignment == null)
+            {
+                return NotFound("Assignment not found or you don't have permission to modify it.");
+            }
+
+            var validStudents = _context.Users
+            .Where(u => studentIds.Contains(u.Id) && EF.Property<string>(u, "Discriminator") == "Student")
+            .ToList();
+
+
+            foreach (var student in validStudents)
+            {
+                if (!_context.StudentAssignments.Any(sa => sa.AssignmentId == assignmentId && sa.UserId == student.Id))
+                {
+                    _context.StudentAssignments.Add(new StudentAssignment
+                    {
+                        UserId = student.Id,
+                        AssignmentId = assignmentId
+                    });
+                }
+            }
+
+            // Save changes to the database
+            _context.SaveChanges();
+
+            return Ok("Students successfully added to the assignment.");
+        }
+
+
+
 
         [HttpGet]
         [Authorize(Roles = "Teacher")]
@@ -51,5 +93,7 @@ namespace StudentGradeTracker.Controllers{
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
+
+        
     }
 }

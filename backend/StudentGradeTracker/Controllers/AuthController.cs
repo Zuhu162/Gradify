@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using StudentGradeTracker.Models;
 using StudentGradeTracker.Data;
 using StudentGradeTracker.Helpers;
-using Microsoft.EntityFrameworkCore;
 
 namespace StudentGradeTracker.Controllers
 {
