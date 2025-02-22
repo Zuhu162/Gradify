@@ -29,6 +29,10 @@ namespace StudentGradeTracker.Controllers
             if (assignment == null)
                 return NotFound("Assignment not found.");
 
+            // ✅ Check if the deadline has passed
+            if (DateTime.UtcNow > assignment.DueDate)
+                return BadRequest("The deadline for this assignment has passed. Submission not allowed.");
+
             // Check if student is allowed to submit
             var isStudentAssigned = _context.StudentAssignments
                 .Any(sa => sa.AssignmentId == submission.AssignmentId && sa.UserId == userId);
@@ -136,8 +140,6 @@ namespace StudentGradeTracker.Controllers
 
             return Ok("Submission deleted successfully.");
         }
-
-
 
         //Get submissions for teachers
         [HttpGet("{assignmentId}")]
