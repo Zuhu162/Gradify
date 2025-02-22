@@ -32,9 +32,9 @@ namespace StudentGradeTracker.Data
                 .OnDelete(DeleteBehavior.NoAction);  // ❌ No Cascade Delete
 
             modelBuilder.Entity<Submission>()
-                .HasOne(s => s.Student)
+                .HasOne(s => s.User)
                 .WithMany()
-                .HasForeignKey(s => s.StudentId)
+                .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.NoAction);  // ❌ No Cascade Delete
 
             modelBuilder.Entity<Submission>()

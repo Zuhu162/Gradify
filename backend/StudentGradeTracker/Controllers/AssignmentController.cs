@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentGradeTracker.Data;
 using StudentGradeTracker.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace StudentGradeTracker.Controllers{
     [Route("api/assignments")]
@@ -14,6 +15,8 @@ namespace StudentGradeTracker.Controllers{
         public AssignmentController(ApplicationDbContext context){
             _context = context;
         }
+
+        //Creating an assingment
 
         [HttpPost("create")]
         [Authorize(Roles = "Teacher")]
@@ -27,6 +30,7 @@ namespace StudentGradeTracker.Controllers{
             return Ok(assignment);
         }
 
+        //Adding students to assingments
         
         [HttpPatch("{assignmentId}/add-students")]
         [Authorize(Roles = "Teacher")]
@@ -67,6 +71,7 @@ namespace StudentGradeTracker.Controllers{
 
 
 
+        //Getting Assingments
 
         [HttpGet]
         [Authorize(Roles = "Teacher")]
@@ -94,6 +99,25 @@ namespace StudentGradeTracker.Controllers{
             }
         }
 
-        
+        [HttpGet("student-assignments")]
+        [Authorize(Roles = "Student")]
+        public IActionResult GetStudentAssignments(){
+            try{
+                var userIdClim = User.FindFirst("UserId")?.Value;;;
+                if (string.IsNullOrEmpty(userIdClim)) return Unauthorized("User ID not found in token.");
+
+                int userId = int.Parse(userIdClim);
+
+                var assignments = _context.StudentAssignments.
+                Where(sa => sa.UserId == userId).
+                Select(sa => sa.Assignment).
+                ToList();
+
+                return Ok(assignments);             
+            }
+            catch (Exception ex){
+                return StatusCode(500, $"Internal server Error: {ex.Message}");
+            }
+        }
     }
 }
