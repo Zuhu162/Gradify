@@ -35,6 +35,12 @@ namespace StudentGradeTracker.Controllers
             if (!isStudentAssigned)
                 return Unauthorized("You are not assigned to this assignment.");
 
+            // ✅ Check for existing submission
+            var existingSubmission = _context.Submissions
+                .FirstOrDefault(s => s.AssignmentId == submission.AssignmentId && s.UserId == userId);
+            if (existingSubmission != null)
+                return BadRequest("You have already submitted this assignment.");
+
             // Create a new submission
             var newSubmission = new Submission
             {
@@ -51,10 +57,90 @@ namespace StudentGradeTracker.Controllers
 
             return Ok("Assignment submitted successfully.");
         }
-   
+
+
+        //Get all submissions 
+        [HttpGet("my-submissions")]
+        [Authorize(Roles = "Student")]
+        public IActionResult GetMySubmissions()
+        {
+            // Extract UserId from JWT token
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Fetch all submissions by the student
+            var submissions = _context.Submissions
+                .Where(s => s.UserId == userId)
+                .ToList()
+                .Select(s => new
+                {
+                    s.Id,
+                    AssignmentName = _context.Assignments.FirstOrDefault(a => a.Id == s.AssignmentId)?.Name,
+                    s.FileUrl,
+                    s.SubmittedAt,
+                    s.Grade,
+                    s.Status
+                });
+
+            return Ok(submissions);
+        }
+
+        // Get a student's own submission for a specific assignment
+        [HttpGet("{assignmentId}/my-submission")]
+        [Authorize(Roles = "Student")]
+        public IActionResult GetMySubmission(int assignmentId)
+        {
+            // Extract UserId from JWT token
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Fetch the student's submission for the given assignment
+            var submission = _context.Submissions
+                .FirstOrDefault(s => s.AssignmentId == assignmentId && s.UserId == userId);
+
+            if (submission == null)
+            {
+                return NotFound("No submission found for this assignment.");
+            }
+
+            // Return the submission details
+            return Ok(new
+            {
+                submission.Id,
+                submission.FileUrl,
+                submission.SubmittedAt,
+                submission.Grade,
+                submission.Status
+            });
+        }
+
+        // Delete a submission by ID
+        [HttpDelete("{submissionId}/delete")]
+        [Authorize(Roles = "Student")]
+        public IActionResult DeleteSubmission(int submissionId)
+        {
+            // Extract UserId from JWT token
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Find the submission and validate ownership
+            var submission = _context.Submissions.FirstOrDefault(s => s.Id == submissionId && s.UserId == userId);
+
+            if (submission == null)
+                return NotFound("Submission not found or you don't have permission to delete it.");
+
+            // Prevent deletion if the submission is already graded
+            if (submission.Status != "Pending")
+                return BadRequest("You cannot delete a submission that has already been graded.");
+
+            // Delete the submission
+            _context.Submissions.Remove(submission);
+            _context.SaveChanges();
+
+            return Ok("Submission deleted successfully.");
+        }
+
+
 
         //Get submissions for teachers
-        [HttpGet("{assignmentId}/submissions")]
+        [HttpGet("{assignmentId}")]
         [Authorize(Roles = "Teacher")]
         public IActionResult GetSubmissionsForAssignment(int assignmentId)
         {
@@ -83,5 +169,40 @@ namespace StudentGradeTracker.Controllers
 
             return Ok(submissions);
         }
+
+        // Grade a specific submission
+        [HttpPatch("{submissionId}/grade")]
+        [Authorize(Roles = "Teacher")]
+        public IActionResult GradeSubmission(int submissionId, [FromBody] GradeRequest request)
+        {
+            // Extract UserId from JWT token
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Fetch the submission and verify the teacher owns the related assignment
+            var submission = _context.Submissions
+                .FirstOrDefault(s => s.Id == submissionId && s.Assignment.UserId == userId);
+
+            if (submission == null)
+            {
+                return NotFound("Submission not found or you don't have permission to grade this submission.");
+            }
+
+            // Update grade and status
+            submission.Grade = request.Grade;
+            submission.Status = "Graded";
+
+            _context.Submissions.Update(submission);
+            _context.SaveChanges();
+
+            return Ok("Submission graded successfully.");
+        }
+
+        // Request model for grading
+        public class GradeRequest
+        {
+            public string Grade { get; set; } = string.Empty;
+        }
+
+
     }
 }
