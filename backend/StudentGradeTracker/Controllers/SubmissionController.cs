@@ -52,7 +52,7 @@ namespace StudentGradeTracker.Controllers
                 AssignmentId = submission.AssignmentId,
                 FileUrl = submission.FileUrl,
                 SubmittedAt = DateTime.UtcNow,
-                Status = "Pending",
+                Status = "Submitted",
                 Grade = "Ungraded"
             };
 

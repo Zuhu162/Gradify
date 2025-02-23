@@ -5,7 +5,7 @@ namespace StudentGradeTracker.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
@@ -29,20 +29,20 @@ namespace StudentGradeTracker.Data
                 .HasOne(sa => sa.Assignment)
                 .WithMany(a => a.StudentAssignments)
                 .HasForeignKey(sa => sa.AssignmentId)
-                .OnDelete(DeleteBehavior.NoAction);  // ❌ No Cascade Delete
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Submission>()
                 .HasOne(s => s.User)
                 .WithMany()
                 .HasForeignKey(s => s.UserId)
-                .OnDelete(DeleteBehavior.NoAction);  // ❌ No Cascade Delete
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Submission>()
                 .HasOne(s => s.Assignment)
                 .WithMany()
                 .HasForeignKey(s => s.AssignmentId)
-                .OnDelete(DeleteBehavior.NoAction);  // ❌ No Cascade Delete
+                .OnDelete(DeleteBehavior.NoAction);
         }
-      
+
     }
 }
