@@ -1,25 +1,41 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule for two-way data binding
+import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-teacher-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf],
   templateUrl: './teacher-login.component.html',
   styleUrls: ['./teacher-login.component.css'],
 })
 export class TeacherLoginComponent {
   email: string = '';
   password: string = '';
+  errorMessage: string = '';
+  successMessage: string = '';
 
-  // ✅ Handle form submission
+  constructor(private authService: AuthService, private router: Router) {}
+
+  // form submission
   onSubmit(): void {
     if (this.email && this.password) {
-      console.log('Form Submitted!');
-      console.log('Email:', this.email);
-      console.log('Password:', this.password);
+      this.authService.loginTeacher(this.email, this.password).subscribe({
+        next: (response) => {
+          this.successMessage = 'Login successful!';
+          this.errorMessage = '';
+          // Redirect to dashboard after successful login
+          this.router.navigate(['/teacher-dashboard']); // Replace with the actual route
+        },
+        error: (error) => {
+          this.errorMessage = error.message;
+          this.successMessage = '';
+        },
+      });
     } else {
-      console.log('Form is invalid.');
+      this.errorMessage = 'Please enter both email and password.';
     }
   }
 }
