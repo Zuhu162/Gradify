@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private apiUrl = environment.apiBaseUrl;
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
 
@@ -41,16 +44,16 @@ export class AuthService {
 
   loginTeacher(email: string, password: string): Observable<any> {
     const loginData = { email, password };
-    const apiUrl = 'http://localhost:5025/api/auth/login/teacher'; // Teacher login route
-
-    return this.http.post<any>(apiUrl, loginData).pipe(
-      tap((response) => {
-        if (response && response.token) {
-          localStorage.setItem('authToken', response.token);
-        }
-      }),
-      catchError(this.handleError)
-    );
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/login/teacher`, loginData)
+      .pipe(
+        tap((response) => {
+          if (response && response.token) {
+            localStorage.setItem('authToken', response.token);
+          }
+        }),
+        catchError(this.handleError)
+      );
   }
 
   // Retrieve the stored JWT token

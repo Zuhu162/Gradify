@@ -11,7 +11,6 @@ namespace StudentGradeTracker.Models
 
         public DateTime DueDate { get; set; }
 
-        // Replace TeacherId with UserId
         public int UserId { get; set; }  // Foreign Key (References Users table)
         public User? User { get; set; }  // Navigation Property (Teacher)
 
