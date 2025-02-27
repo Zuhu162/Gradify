@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { DatePipe, NgClass, NgFor } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 interface Assignments {
   id: String;
@@ -13,7 +14,7 @@ interface Assignments {
 
 @Component({
   selector: 'app-teacher-dashboard',
-  imports: [NgFor, DatePipe, NgClass],
+  imports: [NgFor, DatePipe, NgClass, RouterLink],
   templateUrl: './teacher-dashboard.component.html',
   styleUrl: './teacher-dashboard.component.css',
   encapsulation: ViewEncapsulation.None, // Disable view encapsulation
