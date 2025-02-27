@@ -56,8 +56,7 @@ namespace StudentGradeTracker.Controllers
                 return Unauthorized("Invalid email or password.");
             }
 
-            // 🔹 Now passing `user.Id` along with `Email` and `Role`
-            var token = _jwtHelper.GenerateToken(user.Id, user.Email, userType);
+            var token = _jwtHelper.GenerateToken(user.Id, user.Name, user.Email, userType);
             return Ok(new { Token = token });
         }
     }
@@ -72,5 +71,5 @@ namespace StudentGradeTracker.Controllers
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-    } 
+    }
 }

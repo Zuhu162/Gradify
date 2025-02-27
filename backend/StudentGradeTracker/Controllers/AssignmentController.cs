@@ -5,14 +5,17 @@ using StudentGradeTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
-namespace StudentGradeTracker.Controllers{
+namespace StudentGradeTracker.Controllers
+{
     [Route("api/assignments")]
     [ApiController]
     [Authorize]
-    
-    public class AssignmentController : ControllerBase {
+
+    public class AssignmentController : ControllerBase
+    {
         private readonly ApplicationDbContext _context;
-        public AssignmentController(ApplicationDbContext context){
+        public AssignmentController(ApplicationDbContext context)
+        {
             _context = context;
         }
 
@@ -30,8 +33,8 @@ namespace StudentGradeTracker.Controllers{
             return Ok(assignment);
         }
 
-        //Adding students to assingments
-        
+        //Adding students to assignments
+
         [HttpPatch("{assignmentId}/add-students")]
         [Authorize(Roles = "Teacher")]
         public IActionResult AddStudentsToAssignment(int assignmentId, [FromBody] List<int> studentIds)
@@ -88,7 +91,15 @@ namespace StudentGradeTracker.Controllers{
 
                 // Fetch assignments created by the logged-in teacher
                 var assignments = _context.Assignments
-                                        .Where(a => a.UserId == userId) // Use UserId instead of TeacherId
+                                        .Where(a => a.UserId == userId)
+                                        .Select(a => new
+                                        {
+                                            a.Id,
+                                            a.Name
+                                            ,
+                                            a.DueDate,
+                                            StudentCount = a.StudentAssignments.Count // gets the number of students
+                                        })
                                         .ToList();
 
                 return Ok(assignments);
@@ -101,9 +112,11 @@ namespace StudentGradeTracker.Controllers{
 
         [HttpGet("student-assignments")]
         [Authorize(Roles = "Student")]
-        public IActionResult GetStudentAssignments(){
-            try{
-                var userIdClim = User.FindFirst("UserId")?.Value;;;
+        public IActionResult GetStudentAssignments()
+        {
+            try
+            {
+                var userIdClim = User.FindFirst("UserId")?.Value; ; ;
                 if (string.IsNullOrEmpty(userIdClim)) return Unauthorized("User ID not found in token.");
 
                 int userId = int.Parse(userIdClim);
@@ -113,9 +126,10 @@ namespace StudentGradeTracker.Controllers{
                 Select(sa => sa.Assignment).
                 ToList();
 
-                return Ok(assignments);             
+                return Ok(assignments);
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Internal server Error: {ex.Message}");
             }
         }

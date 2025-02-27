@@ -27,7 +27,9 @@ export class TeacherLoginComponent {
           this.successMessage = 'Login successful!';
           this.errorMessage = '';
           // Redirect to dashboard after successful login
-          this.router.navigate(['/teacher-dashboard']); // Replace with the actual route
+          this.router
+            .navigate(['/teacher-dashboard'])
+            .then(() => window.location.reload()); // Replace with the actual route
         },
         error: (error) => {
           this.errorMessage = error.message;

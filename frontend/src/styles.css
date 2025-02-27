@@ -5,3 +5,19 @@
 :root {
   --font-kite: "Kite One", sans-serif;
 }
+
+/* Add spacing between rows */
+table {
+  border-collapse: separate;
+  border-spacing: 0 10px; /* ✅ Adjust vertical spacing */
+  width: 100%;
+}
+
+/* Apply rounded corners to the first and last header cells */
+thead tr th:first-child {
+  border-top-left-radius: 12px;
+}
+
+thead tr th:last-child {
+  border-top-right-radius: 12px;
+}

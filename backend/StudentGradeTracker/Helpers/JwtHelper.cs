@@ -14,7 +14,7 @@ namespace StudentGradeTracker.Helpers
             _configuration = configuration;
         }
 
-        public string GenerateToken(int userId, string email, string role)
+        public string GenerateToken(int userId, string name, string email, string role)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -23,7 +23,8 @@ namespace StudentGradeTracker.Helpers
             {
                 new Claim("UserId", userId.ToString()), // Store UserId instead of TeacherId/StudentId
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, char.ToUpper(role[0]) + role.Substring(1).ToLower()) 
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Role, char.ToUpper(role[0]) + role.Substring(1).ToLower())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
