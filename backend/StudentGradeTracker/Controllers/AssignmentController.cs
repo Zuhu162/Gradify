@@ -95,8 +95,7 @@ namespace StudentGradeTracker.Controllers
                                         .Select(a => new
                                         {
                                             a.Id,
-                                            a.Name
-                                            ,
+                                            a.Name,
                                             a.DueDate,
                                             StudentCount = a.StudentAssignments.Count // gets the number of students
                                         })
@@ -110,16 +109,36 @@ namespace StudentGradeTracker.Controllers
             }
         }
 
+        //Get Individal Assignment
+        [HttpGet("{assignmentId}")]
+        [Authorize(Roles = "Teacher")]
+        public IActionResult GetAssignment(int assignmentId)
+        {
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized("User ID not found in token.");
+            int userId = int.Parse(userIdClaim);
+
+            if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("User ID not found in token.");
+            var assignment = _context.Assignments.Where(a => a.UserId == userId).Where(a => a.Id == assignmentId);
+            if (assignment == null)
+            {
+                return NotFound("Assignment not found or you don't have permission to view it.");
+            }
+
+            return Ok(assignment);
+        }
+
         [HttpGet("student-assignments")]
         [Authorize(Roles = "Student")]
         public IActionResult GetStudentAssignments()
         {
             try
             {
-                var userIdClim = User.FindFirst("UserId")?.Value; ; ;
-                if (string.IsNullOrEmpty(userIdClim)) return Unauthorized("User ID not found in token.");
+                var userIdClaim = User.FindFirst("UserId")?.Value;
+                if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("User ID not found in token.");
 
-                int userId = int.Parse(userIdClim);
+                int userId = int.Parse(userIdClaim);
 
                 var assignments = _context.StudentAssignments.
                 Where(sa => sa.UserId == userId).
