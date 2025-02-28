@@ -57,6 +57,35 @@ namespace StudentGradeTracker.Controllers
             return Ok(assignment);
         }
 
+        [HttpDelete("{assignmentId}")]
+        [Authorize(Roles = "Teacher")]
+        public IActionResult DeleteAssignment(int assignmentId)
+        {
+            // Get the authenticated teacher's UserId from JWT
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Fetch the assignment
+            var assignment = _context.Assignments.FirstOrDefault(a => a.Id == assignmentId && a.UserId == userId);
+
+            if (assignment == null)
+            {
+                return NotFound("Assignment not found or you don't have permission to delete it.");
+            }
+
+            // delete all student assignments linked to this assignment
+            var relatedStudentAssignments = _context.StudentAssignments.Where(sa => sa.AssignmentId == assignmentId);
+            _context.StudentAssignments.RemoveRange(relatedStudentAssignments);
+
+            // delete the assignment itself
+            _context.Assignments.Remove(assignment);
+
+            //  Save changes to the database
+            _context.SaveChanges();
+
+            return Ok("Assignment deleted successfully.");
+        }
+
+
 
         //Adding students to assignments
 

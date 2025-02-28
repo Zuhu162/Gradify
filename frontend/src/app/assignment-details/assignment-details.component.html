@@ -66,9 +66,13 @@
       <div class="flex w-full justify-between">
         <h2 class="text-xl font-bold">{{ assignment.name }}</h2>
         <div>
-          <button class="btn btn-warning btn-xs mr-2 my-2">
+          <button
+            class="btn btn-warning btn-xs mr-2 my-2"
+            (click)="deleteAssignment()"
+          >
             Delete Assignment
           </button>
+
           <button (click)="openEditModal()" class="btn btn-primary btn-xs my-2">
             Edit Assignment
           </button>

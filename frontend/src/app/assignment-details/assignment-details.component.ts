@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { forkJoin } from 'rxjs';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
@@ -19,7 +19,11 @@ export class AssignmentDetailsComponent implements OnInit {
   assignment: any = {};
   authToken: any = '';
 
-  constructor(private route: ActivatedRoute, private httpClient: HttpClient) {}
+  constructor(
+    private route: ActivatedRoute,
+    private httpClient: HttpClient,
+    private router: Router
+  ) {}
 
   isGraded(status: string): boolean {
     return status === 'Graded';
@@ -106,7 +110,7 @@ export class AssignmentDetailsComponent implements OnInit {
   @ViewChild('addStudentsModal', { static: false })
   addStudentsModal!: ElementRef<HTMLDialogElement>;
 
-  studentIdToAdd: string = ''; // ✅ Store entered Student ID
+  studentIdToAdd: string = ''; // Store entered Student ID
 
   openAddStudentsModal() {
     this.addStudentsModal.nativeElement.showModal(); // ✅ Open modal
@@ -172,7 +176,7 @@ export class AssignmentDetailsComponent implements OnInit {
     this.httpClient
       .patch(
         `${environment.apiBaseUrl}/assignments/${this.assignment.id}/remove-student/${studentId}`,
-        {}, // ✅ Empty body
+        {}, // Empty body
         {
           headers: { Authorization: `Bearer ${this.authToken}` },
           responseType: 'text',
@@ -202,12 +206,12 @@ export class AssignmentDetailsComponent implements OnInit {
   editAssignmentData = { id: 0, name: '', instructions: '', dueDate: '' };
 
   openEditModal() {
-    this.editAssignmentData = { ...this.assignment }; // ✅ Copy current assignment data
-    this.editModal.nativeElement.showModal(); // ✅ Open modal
+    this.editAssignmentData = { ...this.assignment }; // Copy current assignment data
+    this.editModal.nativeElement.showModal(); // Open modal
   }
 
   closeEditModal() {
-    this.editModal.nativeElement.close(); // ✅ Close modal
+    this.editModal.nativeElement.close(); // Close modal
   }
 
   saveEdit() {
@@ -229,7 +233,7 @@ export class AssignmentDetailsComponent implements OnInit {
       )
       .subscribe(
         (updatedAssignment) => {
-          this.assignment = updatedAssignment; // ✅ Update UI
+          this.assignment = updatedAssignment; // Update UI
           this.showToast('Assignment updated successfully!', 'success');
           this.closeEditModal();
         },
@@ -253,10 +257,30 @@ export class AssignmentDetailsComponent implements OnInit {
     }, 3000);
   }
 
-  // deletStudent(){
-  //   const confirmed = confirm('Are you sure you want to delete this assignment?');
-  //   if (!confirmed) return;
+  deleteAssignment() {
+    const confirmed = confirm(
+      'Are you sure you want to delete this assignment?'
+    );
+    if (!confirmed) return;
 
-  //   this.httpClient.delete(`${environment}/`)
-  // }
+    const token = localStorage.getItem('authToken');
+
+    this.httpClient
+      .delete(`${environment.apiBaseUrl}/assignments/${this.assignment.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'text',
+      })
+      .subscribe(
+        () => {
+          this.showToast('Assignment deleted successfully!', 'success');
+          setTimeout(() => {
+            this.router.navigate(['/teacher-dashboard']); // ✅ Redirect after deletion
+          }, 2000);
+        },
+        (error) => {
+          console.error('Error deleting assignment:', error);
+          this.showToast('Error deleting assignment', 'error');
+        }
+      );
+  }
 }
