@@ -1,0 +1,40 @@
+<!-- Assignment Edit Modal -->
+<dialog #assignmentEditModal class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold mb-3">Edit Assignment</h3>
+
+    <!-- Name Input -->
+    <label class="block mb-2">Assignment Name:</label>
+    <input
+      type="text"
+      [(ngModel)]="assignmentData.name"
+      class="input input-bordered w-full p-2"
+      placeholder="Enter assignment name"
+      required
+    />
+
+    <!-- Instructions Input -->
+    <label class="block mt-3 mb-2">Instructions:</label>
+    <textarea
+      [(ngModel)]="assignmentData.instructions"
+      class="textarea textarea-bordered w-full p-2"
+      placeholder="Enter instructions"
+      required
+    ></textarea>
+
+    <!-- Due Date Picker -->
+    <label class="block mt-3 mb-2">Due Date:</label>
+    <input
+      type="datetime-local"
+      [(ngModel)]="assignmentData.dueDate"
+      class="input input-bordered w-full p-2"
+      required
+    />
+
+    <!-- Modal Actions -->
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="save()">Save</button>
+      <button class="btn" (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</dialog>

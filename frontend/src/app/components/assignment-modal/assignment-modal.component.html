@@ -1,0 +1,48 @@
+<!-- Assignment Modal -->
+<dialog #assignmentModal id="assignmentModal" class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="text-lg font-bold">Create New Assignment</h3>
+
+    <!-- Form Fields -->
+    <form #assignmentForm="ngForm">
+      <!-- Assignment Name -->
+      <label class="block mt-3">Assignment Name:</label>
+      <input
+        type="text"
+        [(ngModel)]="assignmentData.name"
+        name="name"
+        required
+        class="input input-bordered w-full"
+      />
+
+      <!-- Instructions -->
+      <label class="block mt-3">Instructions:</label>
+      <textarea
+        [(ngModel)]="assignmentData.instructions"
+        name="instructions"
+        required
+        class="textarea textarea-bordered w-full"
+      ></textarea>
+
+      <!-- Due Date Picker -->
+      <label class="block mt-3">Due Date:</label>
+
+      <input
+        type="datetime-local"
+        [(ngModel)]="assignmentData.dueDate"
+        name="dueDate"
+        required
+        class="input input-bordered w-full"
+      />
+      <p class="text-xs my-3">
+        Press <kbd class="kbd">space</kbd> after selecting due date to open
+        calendar
+      </p>
+    </form>
+
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="save()">Save</button>
+      <button class="btn" (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</dialog>

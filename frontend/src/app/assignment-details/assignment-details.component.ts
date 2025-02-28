@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { forkJoin } from 'rxjs';
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-assignment-details',
-  imports: [NgFor, FormsModule, DatePipe, NgIf, NgClass],
+  imports: [NgFor, FormsModule, DatePipe, NgIf, NgClass, RouterLink],
   standalone: true,
   templateUrl: './assignment-details.component.html',
   styleUrl: './assignment-details.component.css',
@@ -195,9 +195,54 @@ export class AssignmentDetailsComponent implements OnInit {
       );
   }
 
+  // Edit Assignment Modal
+  @ViewChild('editModal', { static: false })
+  editModal!: ElementRef<HTMLDialogElement>;
+
+  editAssignmentData = { id: 0, name: '', instructions: '', dueDate: '' };
+
+  openEditModal() {
+    this.editAssignmentData = { ...this.assignment }; // ✅ Copy current assignment data
+    this.editModal.nativeElement.showModal(); // ✅ Open modal
+  }
+
+  closeEditModal() {
+    this.editModal.nativeElement.close(); // ✅ Close modal
+  }
+
+  saveEdit() {
+    if (!this.editAssignmentData.name || !this.editAssignmentData.dueDate) {
+      this.showToast('Please fill in all fields.', 'error');
+      return;
+    }
+
+    const token = localStorage.getItem('authToken');
+
+    // ✅ PATCH request to update the assignment
+    this.httpClient
+      .patch(
+        `${environment.apiBaseUrl}/assignments/${this.editAssignmentData.id}/edit`,
+        this.editAssignmentData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .subscribe(
+        (updatedAssignment) => {
+          this.assignment = updatedAssignment; // ✅ Update UI
+          this.showToast('Assignment updated successfully!', 'success');
+          this.closeEditModal();
+        },
+        (error) => {
+          console.error('Error updating assignment:', error);
+          this.showToast('Error updating assignment', 'error');
+        }
+      );
+  }
+
+  //Toast
   toastMessage: string = '';
   toastType: string = '';
-  //Toast
   showToast(message: string, type: string) {
     this.toastMessage = message;
     this.toastType =
@@ -207,4 +252,11 @@ export class AssignmentDetailsComponent implements OnInit {
       this.toastMessage = ''; // ✅ Auto-hide toast after 3 seconds
     }, 3000);
   }
+
+  // deletStudent(){
+  //   const confirmed = confirm('Are you sure you want to delete this assignment?');
+  //   if (!confirmed) return;
+
+  //   this.httpClient.delete(`${environment}/`)
+  // }
 }

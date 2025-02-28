@@ -2,8 +2,11 @@
   <div
     class="w-3/4 flex justify-center items-center flex-col lg:flex-row justify-center gap-5"
   >
+    <div class="w-full font-bold">
+      <a [routerLink]="['/']">< Back to Dashboard</a>
+    </div>
     <div
-      class="w-full min-h-[500px] overflow-x-auto lg:w-3/4 bg-base-200 p-10 rounded-xl"
+      class="w-full min-h-[500px] max-h-[500px] overflow-x-auto lg:w-3/4 bg-base-200 p-10 rounded-xl"
     >
       <button class="btn btn-primary mb-4" (click)="openAddStudentsModal()">
         + Add Student
@@ -53,73 +56,23 @@
                 {{ submission.grade ?? "N/A" }}
               </span>
             </td>
-
-            <!-- Grade Modal  -->
-            <dialog #gradeModal class="modal">
-              <div class="modal-box bg-base-200">
-                <h3 class="text-lg font-bold mb-3">Grade Assignment</h3>
-                <p class="mb-3">
-                  Grading submission for {{ selectedSubmission?.studentName }}
-                </p>
-
-                <label class="mr-3" for="grade">Select Grade:</label>
-                <select
-                  [(ngModel)]="selectedGrade"
-                  class="select select-bordered"
-                >
-                  <option value="" disabled>Select Grade</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
-                  <option value="F">F</option>
-                </select>
-
-                <div class="modal-action">
-                  <button class="btn btn-primary" (click)="saveGrade()">
-                    Save
-                  </button>
-
-                  <button class="btn btn-neutral" (click)="closeGradeModal()">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </dialog>
-            <!-- Grade Modal  -->
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Add Student Modal -->
-    <dialog #addStudentsModal class="modal">
-      <div class="modal-box bg-base-200">
-        <h3 class="text-lg font-bold mb-3">Add Student</h3>
-
-        <label class="mr-3" for="studentId">Enter Student ID:</label>
-        <input
-          type="text"
-          [(ngModel)]="studentIdToAdd"
-          class="input input-bordered w-full mb-3 mt-3"
-          placeholder="Student ID"
-        />
-
-        <div class="modal-action">
-          <button class="btn btn-primary" (click)="saveStudent()">Save</button>
-          <button class="btn btn-neutral" (click)="closeAddStudentsModal()">
-            Cancel
-          </button>
-        </div>
-      </div>
-    </dialog>
-    <!-- Add Student Modal -->
-
     <!-- Assignment Details Section -->
     <div class="w-full h-full lg:w-1/4 bg-base-200 p-6 rounded-xl shadow-md">
       <div class="flex w-full justify-between">
         <h2 class="text-xl font-bold">{{ assignment.name }}</h2>
-        <button class="btn btn-warning btn-xs my-2">Delete Assignment</button>
+        <div>
+          <button class="btn btn-warning btn-xs mr-2 my-2">
+            Delete Assignment
+          </button>
+          <button (click)="openEditModal()" class="btn btn-primary btn-xs my-2">
+            Edit Assignment
+          </button>
+        </div>
       </div>
 
       <p>
@@ -154,6 +107,99 @@
     </div>
   </div>
 </div>
+
+<!-- Add Student Modal -->
+<dialog #addStudentsModal class="modal">
+  <div class="modal-box bg-base-200">
+    <h3 class="text-lg font-bold mb-3">Add Student</h3>
+
+    <label class="mr-3" for="studentId">Enter Student ID:</label>
+    <input
+      type="text"
+      [(ngModel)]="studentIdToAdd"
+      class="input input-bordered w-full mb-3 mt-3"
+      placeholder="Student ID"
+    />
+
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="saveStudent()">Save</button>
+      <button class="btn btn-neutral" (click)="closeAddStudentsModal()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</dialog>
+<!-- Add Student Modal -->
+
+<!-- Grade Modal  -->
+<dialog #gradeModal class="modal">
+  <div class="modal-box bg-base-200">
+    <h3 class="text-lg font-bold mb-3">Grade Assignment</h3>
+    <p class="mb-3">
+      Grading submission for {{ selectedSubmission?.studentName }}
+    </p>
+
+    <label class="mr-3" for="grade">Select Grade:</label>
+    <select [(ngModel)]="selectedGrade" class="select select-bordered">
+      <option value="" disabled>Select Grade</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+      <option value="F">F</option>
+    </select>
+
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="saveGrade()">Save</button>
+
+      <button class="btn btn-neutral" (click)="closeGradeModal()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</dialog>
+<!-- Grade Modal  -->
+
+<!-- Edit Assignment Modal -->
+<dialog #editModal class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold mb-3">Edit Assignment</h3>
+
+    <!-- Name Input -->
+    <label class="block mb-2">Assignment Name:</label>
+    <input
+      type="text"
+      [(ngModel)]="editAssignmentData.name"
+      class="input input-bordered w-full p-2"
+      placeholder="Enter assignment name"
+      required
+    />
+
+    <!-- Instructions Input -->
+    <label class="block mt-3 mb-2">Instructions:</label>
+    <textarea
+      [(ngModel)]="editAssignmentData.instructions"
+      class="textarea textarea-bordered w-full p-2"
+      placeholder="Enter instructions"
+      required
+    ></textarea>
+
+    <!-- Due Date Picker -->
+    <label class="block mt-3 mb-2">Due Date:</label>
+    <input
+      type="datetime-local"
+      [(ngModel)]="editAssignmentData.dueDate"
+      class="input input-bordered w-full p-2"
+      required
+    />
+
+    <!-- Modal Actions -->
+    <div class="modal-action">
+      <button class="btn btn-primary" (click)="saveEdit()">Save</button>
+      <button class="btn" (click)="closeEditModal()">Cancel</button>
+    </div>
+  </div>
+</dialog>
 
 <!-- Toast Notifications -->
 <div class="toast toast-top toast-center" *ngIf="toastMessage">

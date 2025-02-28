@@ -33,6 +33,31 @@ namespace StudentGradeTracker.Controllers
             return Ok(assignment);
         }
 
+        //Editing an assignment
+        [HttpPatch("{assignmentId}/edit")]
+        [Authorize(Roles = "Teacher")]
+        public IActionResult EditAssignment(int assignmentId, [FromBody] Assignment updatedAssignment)
+        {
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0"); // Get UserId from JWT Token
+
+            var assignment = _context.Assignments.FirstOrDefault(a => a.Id == assignmentId && a.UserId == userId);
+
+            if (assignment == null)
+            {
+                return NotFound("Assignment not found or you don't have permission to edit it.");
+            }
+
+            // Update assignment fields
+            assignment.Name = updatedAssignment.Name;
+            assignment.Instructions = updatedAssignment.Instructions;
+            assignment.DueDate = updatedAssignment.DueDate;
+
+            _context.SaveChanges(); // Save changes to the database
+
+            return Ok(assignment);
+        }
+
+
         //Adding students to assignments
 
         [HttpPatch("{assignmentId}/add-students")]
@@ -97,6 +122,7 @@ namespace StudentGradeTracker.Controllers
                 // Fetch assignments created by the logged-in teacher
                 var assignments = _context.Assignments
                                         .Where(a => a.UserId == userId)
+                                        .OrderByDescending(a => a.DueDate)
                                         .Select(a => new
                                         {
                                             a.Id,
