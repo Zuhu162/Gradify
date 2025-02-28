@@ -49,11 +49,17 @@ namespace StudentGradeTracker.Controllers
                 return NotFound("Assignment not found or you don't have permission to modify it.");
             }
 
+            // Validate students
             var validStudents = _context.Users
-            .Where(u => studentIds.Contains(u.Id) && EF.Property<string>(u, "Discriminator") == "Student")
-            .ToList();
+                .Where(u => studentIds.Contains(u.Id) && EF.Property<string>(u, "Discriminator") == "Student")
+                .ToList();
 
+            if (!validStudents.Any())
+            {
+                return BadRequest("No valid students found. Please check the student IDs.");
+            }
 
+            // Add only new students
             foreach (var student in validStudents)
             {
                 if (!_context.StudentAssignments.Any(sa => sa.AssignmentId == assignmentId && sa.UserId == student.Id))
@@ -66,11 +72,10 @@ namespace StudentGradeTracker.Controllers
                 }
             }
 
-            // Save changes to the database
             _context.SaveChanges();
-
             return Ok("Students successfully added to the assignment.");
         }
+
 
 
 
@@ -109,6 +114,39 @@ namespace StudentGradeTracker.Controllers
             }
         }
 
+        //Remove students
+        [HttpPatch("{assignmentId}/remove-student/{studentId}")]
+        [Authorize(Roles = "Teacher")]
+        public IActionResult RemoveStudentFromAssignment(int assignmentId, int studentId)
+        {
+            // Get the authenticated teacher's UserId from JWT
+            var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
+
+            // Fetch the assignment
+            var assignment = _context.Assignments.FirstOrDefault(a => a.Id == assignmentId && a.UserId == userId);
+            if (assignment == null)
+            {
+                return NotFound("Assignment not found or you don't have permission to modify it.");
+            }
+
+            // Find the student in the assignment
+            var studentAssignment = _context.StudentAssignments
+                .FirstOrDefault(sa => sa.AssignmentId == assignmentId && sa.UserId == studentId);
+
+            if (studentAssignment == null)
+            {
+                return BadRequest("Student is not part of this assignment.");
+            }
+
+            // Remove the student from the assignment
+            _context.StudentAssignments.Remove(studentAssignment);
+            _context.SaveChanges();
+
+            return Ok($"Student {studentId} successfully removed from the assignment.");
+        }
+
+
+
         //Get Individal Assignment
         [HttpGet("{assignmentId}")]
         [Authorize(Roles = "Teacher")]
@@ -120,7 +158,18 @@ namespace StudentGradeTracker.Controllers
             int userId = int.Parse(userIdClaim);
 
             if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("User ID not found in token.");
-            var assignment = _context.Assignments.Where(a => a.UserId == userId).FirstOrDefault(a => a.Id == assignmentId);
+            var assignment = _context.Assignments
+            .Where(a => a.UserId == userId && a.Id == assignmentId)
+            .Select(a => new
+            {
+                a.Id,
+                a.Name,
+                a.DueDate,
+                a.Instructions,
+                StudentCount = a.StudentAssignments.Count, // Include student count
+                a.StudentAssignments
+            })
+            .FirstOrDefault();
             if (assignment == null)
             {
                 return NotFound("Assignment not found or you don't have permission to view it.");

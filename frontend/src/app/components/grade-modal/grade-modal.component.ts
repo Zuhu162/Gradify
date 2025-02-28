@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-grade-modal',
   imports: [],
   templateUrl: './grade-modal.component.html',
-  styleUrl: './grade-modal.component.css'
+  styleUrl: './grade-modal.component.css',
 })
-export class GradeModalComponent {
-
-}
+export class GradeModalComponent {}
