@@ -21,3 +21,16 @@ thead tr th:first-child {
 thead tr th:last-child {
   border-top-right-radius: 12px;
 }
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+table {
+  font-family: "Kite One", sans-serif; /* or your preferred font */
+}

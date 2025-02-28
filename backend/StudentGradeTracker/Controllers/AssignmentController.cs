@@ -120,7 +120,7 @@ namespace StudentGradeTracker.Controllers
             int userId = int.Parse(userIdClaim);
 
             if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("User ID not found in token.");
-            var assignment = _context.Assignments.Where(a => a.UserId == userId).Where(a => a.Id == assignmentId);
+            var assignment = _context.Assignments.Where(a => a.UserId == userId).FirstOrDefault(a => a.Id == assignmentId);
             if (assignment == null)
             {
                 return NotFound("Assignment not found or you don't have permission to view it.");
@@ -129,6 +129,8 @@ namespace StudentGradeTracker.Controllers
             return Ok(assignment);
         }
 
+
+        //Get Assignment for Students
         [HttpGet("student-assignments")]
         [Authorize(Roles = "Student")]
         public IActionResult GetStudentAssignments()

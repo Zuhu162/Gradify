@@ -8,8 +8,9 @@ interface Assignments {
   id: String;
   name: String;
   instructions: String;
-  dueData: Date;
+  dueDate: string;
   userId: String;
+  studentCount: number;
 }
 
 @Component({
@@ -20,7 +21,7 @@ interface Assignments {
   encapsulation: ViewEncapsulation.None, // Disable view encapsulation
 })
 export class TeacherDashboardComponent implements OnInit {
-  assignments: any[] = [];
+  assignments: Assignments[] = [];
 
   constructor(private httpClient: HttpClient) {}
 

@@ -165,7 +165,8 @@ namespace StudentGradeTracker.Controllers
                     s.SubmittedAt,
                     s.Grade,
                     s.Status,
-                    StudentName = _context.Users.FirstOrDefault(u => u.Id == s.UserId)?.Name // In-memory evaluation
+                    StudentName = _context.Users.FirstOrDefault(u => u.Id == s.UserId)?.Name, // In-memory evaluation
+                    StudentId = _context.Users.FirstOrDefault(u => u.Id == s.UserId)?.Id // In-memory evaluation
                 })
                 .ToList();
 

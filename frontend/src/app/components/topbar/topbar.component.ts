@@ -1,13 +1,13 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.css'],
-  imports: [NgIf],
+  imports: [NgIf, RouterLink],
 })
 export class TopbarComponent implements OnInit {
   userName: string | null = null;

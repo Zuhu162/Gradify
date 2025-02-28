@@ -1,6 +1,8 @@
 <div *ngIf="userName" class="flex justify-between items-center p-4">
   <div class="text-lg font-bold flex h-30 items-center">
-    <img src="/Notes.svg" alt="Notes Icon" class="h-20 w-20 mx-auto" />
+    <a [routerLink]="['/']"
+      ><img src="/Notes.svg" alt="Notes Icon" class="h-20 w-20 mx-auto"
+    /></a>
     Welcome, {{ userName }}
   </div>
   <button (click)="logout()" class="flex items-center">
