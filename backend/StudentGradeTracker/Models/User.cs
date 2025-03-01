@@ -16,8 +16,9 @@ namespace StudentGradeTracker.Models
         [Required]
         public string PasswordHash { get; set; } = string.Empty;  // Hidden password
 
-        public void SetPassword(string password){
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);  
+        public void SetPassword(string password)
+        {
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
         }
 
         public bool VerifyPassword(string password)
@@ -26,7 +27,7 @@ namespace StudentGradeTracker.Models
         }
 
         // Navigation properties
-        public List<StudentAssignment> StudentAssignments { get; set; } = new List<StudentAssignment>(); // Add this
+        public List<StudentAssignment> StudentAssignments { get; set; } = new List<StudentAssignment>();
         public List<Assignment> Assignments { get; set; } = new List<Assignment>(); // For teachers
     }
 }

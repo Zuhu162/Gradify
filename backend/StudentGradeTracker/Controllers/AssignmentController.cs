@@ -57,6 +57,8 @@ namespace StudentGradeTracker.Controllers
             return Ok(assignment);
         }
 
+        //Deleting Assignments
+
         [HttpDelete("{assignmentId}")]
         [Authorize(Roles = "Teacher")]
         public IActionResult DeleteAssignment(int assignmentId)
@@ -85,9 +87,7 @@ namespace StudentGradeTracker.Controllers
             return Ok("Assignment deleted successfully.");
         }
 
-
-
-        //Adding students to assignments
+        //Adding Students to Assignments
 
         [HttpPatch("{assignmentId}/add-students")]
         [Authorize(Roles = "Teacher")]
@@ -129,8 +129,6 @@ namespace StudentGradeTracker.Controllers
             _context.SaveChanges();
             return Ok("Students successfully added to the assignment.");
         }
-
-
 
 
         //Getting Assingments

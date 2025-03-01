@@ -1,213 +1,235 @@
-<div class="w-full py-5 flex justify-center">
-  <div
-    class="w-3/4 flex justify-center items-center flex-col lg:flex-row justify-center gap-5"
-  >
-    <div class="w-full font-bold">
+<div
+  class="w-full flex justify-center items-center flex-col lg:flex-row justify-center"
+>
+  <div class="w-3/4">
+    <div class="w-full font-bold block">
       <a [routerLink]="['/']">< Back to Dashboard</a>
     </div>
-    <div
-      class="w-full min-h-[500px] max-h-[500px] overflow-x-auto lg:w-3/4 bg-base-200 p-10 rounded-xl"
-    >
-      <button class="btn btn-primary mb-4" (click)="openAddStudentsModal()">
-        + Add Student
-      </button>
-      <table class="table">
-        <!-- head -->
-        <thead class="bg-base-300">
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Student Id</th>
-            <th>Submission Link</th>
-            <th>Status</th>
-            <th>Grade</th>
-          </tr>
-        </thead>
-        <span
-          class="w-full font-bold flex justify-center"
-          *ngIf="submissions == 0"
+    <div class="w-full py-5 flex justify-center">
+      <div
+        class="w-full flex justify-center items-center flex-col lg:flex-row justify-center gap-5"
+      >
+        <div
+          class="w-full min-h-[500px] max-h-[500px] overflow-x-auto lg:w-3/4 bg-base-200 p-10 rounded-xl"
         >
-          No submissions yet
-        </span>
-        <tbody class="w-full bg-base-100">
-          <!-- row 1 -->
-          <tr
-            class="hover"
-            *ngFor="let submission of submissions; let i = index"
-          >
-            <th>{{ i + 1 }}</th>
-            <td>{{ submission.studentName }}</td>
-            <td>
-              {{ submission.studentId }}
-            </td>
-            <td>
-              <a href="{{ submission.fileUrl }}"
-                ><button class="btn btn-primary btn-sm">🔗</button></a
+          <button class="btn btn-primary mb-4" (click)="openAddStudentsModal()">
+            + Add Student
+          </button>
+          <table class="table">
+            <!-- head -->
+            <thead class="bg-base-300">
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Student Id</th>
+                <th>Submission Link</th>
+                <th>Status</th>
+                <th>Grade</th>
+              </tr>
+            </thead>
+            <span
+              class="w-full font-bold flex justify-center"
+              *ngIf="submissions == 0"
+            >
+              No submissions yet
+            </span>
+            <tbody class="w-full bg-base-100">
+              <!-- row 1 -->
+              <tr
+                class="hover"
+                *ngFor="let submission of submissions; let i = index"
               >
-            </td>
-            <td>{{ submission.status }}</td>
-            <td>
-              <span
-                [class.text-green-500]="isGraded(submission?.status ?? '')"
-                [class.text-red-500]="!isGraded(submission?.status ?? '')"
-                class="cursor-pointer underline"
-                (click)="openGradeModal(submission)"
+                <th>{{ i + 1 }}</th>
+                <td>{{ submission.studentName }}</td>
+                <td>
+                  {{ submission.studentId }}
+                </td>
+                <td>
+                  <a href="{{ submission.fileUrl }}"
+                    ><button class="btn btn-primary btn-sm">🔗</button></a
+                  >
+                </td>
+                <td>{{ submission.status }}</td>
+                <td>
+                  <span
+                    [class.text-green-500]="isGraded(submission?.status ?? '')"
+                    [class.text-red-500]="!isGraded(submission?.status ?? '')"
+                    class="cursor-pointer underline"
+                    (click)="openGradeModal(submission)"
+                  >
+                    {{ submission.grade ?? "N/A" }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Assignment Details Section -->
+        <div
+          class="w-full h-full lg:w-1/4 bg-base-200 p-6 rounded-xl shadow-md"
+        >
+          <div class="flex w-full justify-between lg:block">
+            <h2 class="text-xl font-bold">{{ assignment.name }}</h2>
+            <div class="lg:w-full">
+              <button
+                class="btn btn-warning btn-xs mr-2 my-2"
+                (click)="deleteAssignment()"
               >
-                {{ submission.grade ?? "N/A" }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                Delete Assignment
+              </button>
+
+              <button
+                (click)="openEditModal()"
+                class="btn btn-primary btn-xs my-2"
+              >
+                Edit Assignment
+              </button>
+            </div>
+          </div>
+
+          <p>
+            <strong>Due Date:</strong>
+            {{ assignment.dueDate | date : "dd/MM/yy" }}
+          </p>
+          <div class="flex">
+            <p>
+              <strong>No. of Students:</strong> {{ assignment.studentCount }}
+            </p>
+          </div>
+          <p>
+            <strong>No. of Submissions:</strong>
+            {{ submissions.length }}
+          </p>
+          <p><strong>Instructions:</strong> {{ assignment.instructions }}</p>
+
+          <div class="divider text-lg font-bold my-10">Enrolled Students</div>
+          <div class="max-h-full overflow-y-auto">
+            <ul class="list-disc ml-5">
+              <li
+                *ngFor="let student of assignment.studentAssignments"
+                class="bg-white flex justify-between items-center mb-2 p-2 rounded-lg"
+              >
+                {{ student.userId }}
+                <button
+                  class="btn btn-error btn-xs"
+                  (click)="confirmRemoveStudent(student.userId)"
+                >
+                  Remove
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Assignment Details Section -->
-    <div class="w-full h-full lg:w-1/4 bg-base-200 p-6 rounded-xl shadow-md">
-      <div class="flex w-full justify-between">
-        <h2 class="text-xl font-bold">{{ assignment.name }}</h2>
-        <div>
-          <button
-            class="btn btn-warning btn-xs mr-2 my-2"
-            (click)="deleteAssignment()"
-          >
-            Delete Assignment
-          </button>
+    <!-- Add Student Modal -->
+    <dialog #addStudentsModal class="modal">
+      <div class="modal-box bg-base-200">
+        <h3 class="text-lg font-bold mb-3">Add Student</h3>
 
-          <button (click)="openEditModal()" class="btn btn-primary btn-xs my-2">
-            Edit Assignment
+        <label class="mr-3" for="studentId">Enter Student ID:</label>
+        <input
+          type="text"
+          [(ngModel)]="studentIdToAdd"
+          class="input input-bordered w-full mb-3 mt-3"
+          placeholder="Student ID"
+        />
+
+        <div class="modal-action">
+          <button class="btn btn-primary" (click)="saveStudent()">Save</button>
+          <button class="btn btn-neutral" (click)="closeAddStudentsModal()">
+            Cancel
           </button>
         </div>
       </div>
+    </dialog>
+    <!-- Add Student Modal -->
 
-      <p>
-        <strong>Due Date:</strong> {{ assignment.dueDate | date : "dd/MM/yy" }}
-      </p>
-      <div class="flex">
-        <p><strong>No. of Students:</strong> {{ assignment.studentCount }}</p>
+    <!-- Grade Modal  -->
+    <dialog #gradeModal class="modal">
+      <div class="modal-box bg-base-200">
+        <h3 class="text-lg font-bold mb-3">Grade Assignment</h3>
+        <p class="mb-3">
+          Grading submission for {{ selectedSubmission?.studentName }}
+        </p>
+
+        <label class="mr-3" for="grade">Select Grade:</label>
+        <select [(ngModel)]="selectedGrade" class="select select-bordered">
+          <option value="" disabled>Select Grade</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="F">F</option>
+        </select>
+
+        <div class="modal-action">
+          <button class="btn btn-primary" (click)="saveGrade()">Save</button>
+
+          <button class="btn btn-neutral" (click)="closeGradeModal()">
+            Cancel
+          </button>
+        </div>
       </div>
-      <p>
-        <strong>No. of Submissions:</strong>
-        {{ submissions.length }}
-      </p>
-      <p><strong>Instructions:</strong> {{ assignment.instructions }}</p>
+    </dialog>
+    <!-- Grade Modal  -->
 
-      <div class="divider text-lg font-bold my-10">Enrolled Students</div>
-      <div class="max-h-full overflow-y-auto">
-        <ul class="list-disc ml-5">
-          <li
-            *ngFor="let student of assignment.studentAssignments"
-            class="bg-white flex justify-between items-center mb-2 p-2 rounded-lg"
-          >
-            {{ student.userId }}
-            <button
-              class="btn btn-error btn-xs"
-              (click)="confirmRemoveStudent(student.userId)"
-            >
-              Remove
-            </button>
-          </li>
-        </ul>
+    <!-- Edit Assignment Modal -->
+    <dialog #editModal class="modal">
+      <div class="modal-box">
+        <h3 class="text-lg font-bold mb-3">Edit Assignment</h3>
+
+        <!-- Name Input -->
+        <label class="block mb-2">Assignment Name:</label>
+        <input
+          type="text"
+          [(ngModel)]="editAssignmentData.name"
+          class="input input-bordered w-full p-2"
+          placeholder="Enter assignment name"
+          required
+        />
+
+        <!-- Instructions Input -->
+        <label class="block mt-3 mb-2">Instructions:</label>
+        <textarea
+          [(ngModel)]="editAssignmentData.instructions"
+          class="textarea textarea-bordered w-full p-2"
+          placeholder="Enter instructions"
+          required
+          maxlength="250"
+        ></textarea>
+
+        <!-- Due Date Picker -->
+        <label class="block mt-3 mb-2">Due Date:</label>
+
+        <input
+          type="datetime-local"
+          [(ngModel)]="editAssignmentData.dueDate"
+          class="input input-bordered w-full p-2"
+          required
+        />
+        <p class="text-xs my-3">
+          Press <kbd class="kbd">space</kbd> after selecting due date to open
+          calendar
+        </p>
+
+        <!-- Modal Actions -->
+        <div class="modal-action">
+          <button class="btn btn-primary" (click)="saveEdit()">Save</button>
+          <button class="btn btn-neutral" (click)="closeEditModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Toast Notifications -->
+    <div class="toast toast-top toast-center" *ngIf="toastMessage">
+      <div [ngClass]="toastType" class="alert">
+        <span>{{ toastMessage }}</span>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Add Student Modal -->
-<dialog #addStudentsModal class="modal">
-  <div class="modal-box bg-base-200">
-    <h3 class="text-lg font-bold mb-3">Add Student</h3>
-
-    <label class="mr-3" for="studentId">Enter Student ID:</label>
-    <input
-      type="text"
-      [(ngModel)]="studentIdToAdd"
-      class="input input-bordered w-full mb-3 mt-3"
-      placeholder="Student ID"
-    />
-
-    <div class="modal-action">
-      <button class="btn btn-primary" (click)="saveStudent()">Save</button>
-      <button class="btn btn-neutral" (click)="closeAddStudentsModal()">
-        Cancel
-      </button>
-    </div>
-  </div>
-</dialog>
-<!-- Add Student Modal -->
-
-<!-- Grade Modal  -->
-<dialog #gradeModal class="modal">
-  <div class="modal-box bg-base-200">
-    <h3 class="text-lg font-bold mb-3">Grade Assignment</h3>
-    <p class="mb-3">
-      Grading submission for {{ selectedSubmission?.studentName }}
-    </p>
-
-    <label class="mr-3" for="grade">Select Grade:</label>
-    <select [(ngModel)]="selectedGrade" class="select select-bordered">
-      <option value="" disabled>Select Grade</option>
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="F">F</option>
-    </select>
-
-    <div class="modal-action">
-      <button class="btn btn-primary" (click)="saveGrade()">Save</button>
-
-      <button class="btn btn-neutral" (click)="closeGradeModal()">
-        Cancel
-      </button>
-    </div>
-  </div>
-</dialog>
-<!-- Grade Modal  -->
-
-<!-- Edit Assignment Modal -->
-<dialog #editModal class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold mb-3">Edit Assignment</h3>
-
-    <!-- Name Input -->
-    <label class="block mb-2">Assignment Name:</label>
-    <input
-      type="text"
-      [(ngModel)]="editAssignmentData.name"
-      class="input input-bordered w-full p-2"
-      placeholder="Enter assignment name"
-      required
-    />
-
-    <!-- Instructions Input -->
-    <label class="block mt-3 mb-2">Instructions:</label>
-    <textarea
-      [(ngModel)]="editAssignmentData.instructions"
-      class="textarea textarea-bordered w-full p-2"
-      placeholder="Enter instructions"
-      required
-    ></textarea>
-
-    <!-- Due Date Picker -->
-    <label class="block mt-3 mb-2">Due Date:</label>
-    <input
-      type="datetime-local"
-      [(ngModel)]="editAssignmentData.dueDate"
-      class="input input-bordered w-full p-2"
-      required
-    />
-
-    <!-- Modal Actions -->
-    <div class="modal-action">
-      <button class="btn btn-primary" (click)="saveEdit()">Save</button>
-      <button class="btn" (click)="closeEditModal()">Cancel</button>
-    </div>
-  </div>
-</dialog>
-
-<!-- Toast Notifications -->
-<div class="toast toast-top toast-center" *ngIf="toastMessage">
-  <div [ngClass]="toastType" class="alert">
-    <span>{{ toastMessage }}</span>
   </div>
 </div>

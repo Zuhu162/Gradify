@@ -21,6 +21,7 @@
           <td>{{ assignment.studentCount }}</td>
           <td>
             <span
+              class="font-bold"
               [ngClass]="{
                 'text-red-500': isDue(assignment.dueDate),
                 'text-green-500': !isDue(assignment.dueDate)

@@ -22,6 +22,7 @@
         name="instructions"
         required
         class="textarea textarea-bordered w-full"
+        maxlength="250"
       ></textarea>
 
       <!-- Due Date Picker -->
@@ -42,7 +43,7 @@
 
     <div class="modal-action">
       <button class="btn btn-primary" (click)="save()">Save</button>
-      <button class="btn" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-neutral" (click)="closeModal()">Cancel</button>
     </div>
   </div>
 </dialog>
