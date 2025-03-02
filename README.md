@@ -1,8 +1,20 @@
-# Gradify
+# Assignment Grader
 
 ## Overview
 
-**Gradify** - is a web-based platform that simplifies assignment management and grading for teachers and students. Teachers can create assignments, track submissions, and grade efficiently, while students can submit their work via Google Drive or PDFs and view their grades seamlessly. 🚀
+**Gradify – A Teacher-Student Assignment Grading System** 📚✨
+
+**Gradify** is a web-based platform that simplifies **assignment management and grading** for teachers and students. Teachers can **create assignments, track submissions, and grade efficiently**, while students can **submit their work via Google Drive or PDFs** and view their grades seamlessly. 🚀
+
+## Architecture
+
+Gradify follows a **Three-Tier Architecture** with a **RESTful API**:
+
+- **Frontend (Angular 19)** – Handles UI/UX and communicates with the backend via REST APIs.
+- **Backend (ASP.NET Core)** – Implements business logic, authentication, and API endpoints.
+- **Database (SQL Server)** – Stores assignments, submissions, and user data securely.
+
+This architecture ensures **scalability, security, and flexibility**, allowing future integrations with mobile apps or third-party services. 🔐🚀
 
 ---
 
@@ -123,27 +135,4 @@ Backend runs on `http://localhost:5000`
 - `DELETE /api/assignments/{assignmentId}` - Delete an assignment.
 - `PATCH /api/assignments/{assignmentId}/add-students` - Add students to an assignment.
 - `PATCH /api/assignments/{assignmentId}/remove-student/{studentId}` - Remove a student from an assignment.
-- `GET /api/assignments/{assignmentId}` - Fetch individual assignment details (Teacher view).
-- `GET /api/assignments/{assignmentId}/student-view` - Fetch individual assignment details (Student view).
-- `GET /api/assignments/student-assignments` - Get assignments assigned to a student.
-
-### **Submissions**
-
-- `POST /api/submissions/submit` - Submit an assignment (Student access only).
-- `GET /api/submissions/my-submissions` - Get all submissions by a student.
-- `GET /api/submissions/{assignmentId}/my-submission` - Get a student's submission for a specific assignment.
-- `DELETE /api/submissions/{submissionId}/delete` - Delete a student's submission (if ungraded).
-- `GET /api/submissions/{assignmentId}` - Get all submissions for an assignment (Teacher access only).
-- `PATCH /api/submissions/{submissionId}/grade` - Grade a student's submission.
-
----
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-## Contact
-
-For any issues or feature requests, feel free to reach out.
+- `GET /api/assignments/{assignmentId}` - Fetch individual
