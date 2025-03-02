@@ -62,29 +62,29 @@ Backend runs on `http://localhost:5000`
 
 ### **Authentication (Side-by-Side)**
 
-| Login                                | Registration                                      |
-| ------------------------------------ | ------------------------------------------------- |
-| ![Login](frontend/public/Login.JPEG) | ![Registration](frontend/public/Registration.JPG) |
+| Login                                           | Registration                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------- |
+| ![Login](frontend/public/screenshots/Login.JPG) | ![Registration](frontend/public/screenshots/Registration.JPG) |
 
 ### **Student Dashboard (Full Width)**
 
-![Student Dashboard](frontend/public/Student-Dashboard.JPG)
+![Student Dashboard](frontend/public/screenshots/Student-Dashboard.JPG)
 
 ### **Student Individual Assignments (Side-by-Side)**
 
-| Unsubmitted                                                                           | Submitted                                                         | Graded                                                                 |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| ![Unsubmitted](<frontend/public/Student-Individual%20Assignment%20(Unsubmitted).JPG>) | ![Submitted](frontend/public/Student-Individual%20Assignment.JPG) | ![Graded](<frontend/public/Student-Individual-Assignment(Graded).JPG>) |
+| Unsubmitted                                                                                       | Submitted                                                                     | Graded                                                                             |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| ![Unsubmitted](<frontend/public/screenshots/Student-Individual%20Assignment%20(Unsubmitted).JPG>) | ![Submitted](frontend/public/screenshots/Student-Individual%20Assignment.JPG) | ![Graded](<frontend/public/screenshots/Student-Individual-Assignment(Graded).JPG>) |
 
 ### **Teacher Dashboard (Full Width)**
 
-![Teacher Dashboard](frontend/public/Teacher-Dashboard.JPG)
+![Teacher Dashboard](frontend/public/screenshots/Teacher-Dashboard.JPG)
 
 ### **Teacher Individual Assignments (Side-by-Side)**
 
-| View Assignment                                              | Grade Assignment                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------------- |
-| ![View](frontend/public/Teacher-Individual%20Assignment.JPG) | ![Grade](frontend/public/Teacher-Individual%20Assignment-Grade.JPG) |
+| View Assignment                                                          | Grade Assignment                                                                |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| ![View](frontend/public/screenshots/Teacher-Individual%20Assignment.JPG) | ![Grade](frontend/public/screenshots/Teacher-Individual%20Assignment-Grade.JPG) |
 
 ---
 
