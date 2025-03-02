@@ -29,7 +29,7 @@ namespace StudentGradeTracker.Controllers
             if (assignment == null)
                 return NotFound("Assignment not found.");
 
-            // ✅ Check if the deadline has passed
+            // Check if the deadline has passed
             if (DateTime.UtcNow > assignment.DueDate)
                 return BadRequest("The deadline for this assignment has passed. Submission not allowed.");
 
@@ -39,7 +39,7 @@ namespace StudentGradeTracker.Controllers
             if (!isStudentAssigned)
                 return Unauthorized("You are not assigned to this assignment.");
 
-            // ✅ Check for existing submission
+            // Check for existing submission
             var existingSubmission = _context.Submissions
                 .FirstOrDefault(s => s.AssignmentId == submission.AssignmentId && s.UserId == userId);
             if (existingSubmission != null)
@@ -59,7 +59,7 @@ namespace StudentGradeTracker.Controllers
             _context.Submissions.Add(newSubmission);
             _context.SaveChanges();
 
-            return Ok("Assignment submitted successfully.");
+            return Ok(new { message = "Assignment submitted successfully." });
         }
 
 
@@ -131,14 +131,15 @@ namespace StudentGradeTracker.Controllers
                 return NotFound("Submission not found or you don't have permission to delete it.");
 
             // Prevent deletion if the submission is already graded
-            if (submission.Status != "Pending")
+            if (submission.Grade != "Ungraded")
                 return BadRequest("You cannot delete a submission that has already been graded.");
 
             // Delete the submission
             _context.Submissions.Remove(submission);
             _context.SaveChanges();
 
-            return Ok("Submission deleted successfully.");
+            return Ok(new { message = "Assignment deleted successfully." });
+
         }
 
         //Get submissions for teachers

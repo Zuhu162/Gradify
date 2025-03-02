@@ -132,7 +132,6 @@ namespace StudentGradeTracker.Controllers
 
 
         //Getting Assingments
-
         [HttpGet]
         [Authorize(Roles = "Teacher")]
         public IActionResult GetAssignments()
@@ -200,7 +199,7 @@ namespace StudentGradeTracker.Controllers
 
 
 
-        //Get Individal Assignment
+        //Get Individal Assignment - Teacher
         [HttpGet("{assignmentId}")]
         [Authorize(Roles = "Teacher")]
         public IActionResult GetAssignment(int assignmentId)
@@ -256,5 +255,42 @@ namespace StudentGradeTracker.Controllers
                 return StatusCode(500, $"Internal server Error: {ex.Message}");
             }
         }
+
+        // Get Individual Assignment - Student
+        [HttpGet("{assignmentId}/student-view")]
+        [Authorize(Roles = "Student")]
+        public IActionResult GetStudentAssignment(int assignmentId)
+        {
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized("User ID not found in token.");
+
+            int userId = int.Parse(userIdClaim);
+
+            // Check if student is assigned to the assignment
+            var isAssigned = _context.StudentAssignments
+                .Any(sa => sa.AssignmentId == assignmentId && sa.UserId == userId);
+
+            if (!isAssigned)
+                return Forbid("You are not assigned to this assignment.");
+
+            // Fetch assignment details
+            var assignment = _context.Assignments
+                .Where(a => a.Id == assignmentId)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.Name,
+                    a.DueDate,
+                    a.Instructions
+                })
+                .FirstOrDefault();
+
+            if (assignment == null)
+                return NotFound("Assignment not found.");
+
+            return Ok(assignment);
+        }
+
     }
 }

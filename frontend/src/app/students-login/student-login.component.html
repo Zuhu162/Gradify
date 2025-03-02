@@ -1,10 +1,10 @@
 <div class="w-full h-screen flex items-center justify-center">
   <div class="bg-base-200 rounded-lg shadow-lg w-full max-w-md">
     <div class="flex justify-around w-full rounded-lg border border-grey-600">
-      <div class="w-full font-bold bg-base-300 text-center p-2">
+      <div class="w-full text-center bg-base-100 p-2">
         <a [routerLink]="['/teacher-login']">Teacher Login</a>
       </div>
-      <div class="w-full text-center bg-base-100 p-2">
+      <div class="w-full font-bold bg-base-300 text-center p-2">
         <a [routerLink]="['/student-login']">Student Login</a>
       </div>
     </div>
@@ -12,16 +12,16 @@
       <img src="/Notes.svg" alt="Notes Icon" class="h-20 w-20 mx-auto mb-4" />
       <h2 class="text-2xl font-bold mb-6 text-center">Assignment Grader</h2>
       <h3 class="text-2xl font-bold mb-6 text-center text-primary">
-        Teacher Login
+        Student Login
       </h3>
-      <!-- ✅ Success Message -->
+      <!-- Success Message -->
       <div
         *ngIf="successMessage"
         class="bg-green-100 text-green-700 p-3 rounded mb-4"
       >
         {{ successMessage }}
       </div>
-      <!-- ✅ Error Message -->
+      <!-- Error Message -->
       <div
         *ngIf="errorMessage"
         class="bg-red-100 text-red-700 p-3 rounded mb-4"

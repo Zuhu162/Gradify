@@ -1,34 +1,35 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-teacher-login',
+  selector: 'app-student-login',
   standalone: true,
+  templateUrl: './student-login.component.html',
+  styleUrls: ['./student-login.component.css'],
   imports: [FormsModule, NgIf, RouterLink],
-  templateUrl: './teacher-login.component.html',
-  styleUrls: ['./teacher-login.component.css'],
 })
-export class TeacherLoginComponent {
+export class StudentLoginComponent {
   email: string = '';
   password: string = '';
-  errorMessage: string = '';
   successMessage: string = '';
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
-  // form submission
   onSubmit(): void {
     if (this.email && this.password) {
-      this.authService.loginTeacher(this.email, this.password).subscribe({
+      this.authService.loginStudent(this.email, this.password).subscribe({
         next: (response) => {
           this.successMessage = 'Login successful!';
           this.errorMessage = '';
           // Redirect to dashboard after successful login
           this.router
-            .navigate(['/teacher-dashboard'])
+            .navigate(['/student-dashboard'])
             .then(() => window.location.reload()); // Replace with the actual route
         },
         error: (error) => {

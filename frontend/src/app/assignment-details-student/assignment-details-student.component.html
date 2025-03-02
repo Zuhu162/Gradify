@@ -1,0 +1,72 @@
+<div class="w-full flex justify-center">
+  <div class="overflow-x-auto w-3/4 bg-base-200 p-10 rounded-xl">
+    <h2 class="text-2xl font-bold mb-4">{{ assignment.name }}</h2>
+
+    <!-- Assignment Details -->
+    <div class="bg-base-100 p-4 rounded-lg mb-6">
+      <p><strong>Instructions:</strong> {{ assignment.instructions }}</p>
+      <p>
+        <strong>Due Date:</strong> {{ assignment.dueDate | date : "dd/MM/yy" }}
+      </p>
+    </div>
+
+    <!-- Grading Status -->
+    <div class="mb-6">
+      <p class="text-lg font-bold">
+        <span
+          [class.text-green-500]="
+            submission?.grade && submission?.grade !== 'Ungraded'
+          "
+          [class.text-red-500]="
+            !submission?.grade || submission?.grade === 'Ungraded'
+          "
+        >
+          Grade: {{ submission?.grade ?? "Ungraded" }}
+        </span>
+      </p>
+    </div>
+
+    <!-- Submission Section -->
+    <div class="bg-base-100 p-4 rounded-lg">
+      <h3 class="text-lg font-bold mb-3">Your Submission</h3>
+
+      <!-- Submission input -->
+      <input
+        type="text"
+        [(ngModel)]="submissionLink"
+        placeholder="Paste Google Drive / PDF link"
+        class="input input-bordered w-full mb-3"
+        [disabled]="submission?.grade && submission?.grade !== 'Ungraded'"
+      />
+
+      <!-- Submit button -->
+      <button
+        class="btn btn-primary w-full mb-2"
+        (click)="submitAssignment()"
+        [disabled]="submission?.grade && submission?.grade !== 'Ungraded'"
+      >
+        Submit
+      </button>
+
+      <!-- Delete button -->
+      <button
+        *ngIf="submission"
+        class="btn btn-error w-full"
+        (click)="deleteSubmission()"
+        [disabled]="submission?.grade && submission?.grade !== 'Ungraded'"
+      >
+        🗑️ Delete Submission
+      </button>
+
+      <!-- View Submission -->
+      <div *ngIf="submission?.fileUrl" class="mt-3">
+        <a
+          [href]="submission.fileUrl"
+          target="_blank"
+          class="btn btn-secondary w-full"
+          >🔗 View Submission</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

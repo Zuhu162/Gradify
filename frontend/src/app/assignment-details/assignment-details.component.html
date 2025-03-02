@@ -45,7 +45,7 @@
                   {{ submission.studentId }}
                 </td>
                 <td>
-                  <a href="{{ submission.fileUrl }}"
+                  <a href="{{ submission.fileUrl }}" target="_blank"
                     ><button class="btn btn-primary btn-sm">🔗</button></a
                   >
                 </td>
@@ -123,6 +123,13 @@
         </div>
       </div>
     </div>
+    <a
+      [routerLink]="['/students']"
+      target="_blank"
+      class="text-blue-600 underline"
+    >
+      Refer to Students List Page to get student IDs
+    </a>
 
     <!-- Add Student Modal -->
     <dialog #addStudentsModal class="modal">

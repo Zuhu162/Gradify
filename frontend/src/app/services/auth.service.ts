@@ -55,6 +55,19 @@ export class AuthService {
         catchError(this.handleError)
       );
   }
+  loginStudent(email: string, password: string): Observable<any> {
+    const loginData = { email, password };
+    return this.http
+      .post<any>(`${this.apiUrl}/auth/login/student`, loginData)
+      .pipe(
+        tap((response) => {
+          if (response && response.token) {
+            localStorage.setItem('authToken', response.token);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
 
   // Retrieve the stored JWT token
   getToken(): string | null {
