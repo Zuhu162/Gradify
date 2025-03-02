@@ -62,9 +62,9 @@ Backend runs on `http://localhost:5000`
 
 ### **Authentication (Side-by-Side)**
 
-| Login                               | Registration                                      |
-| ----------------------------------- | ------------------------------------------------- |
-| ![Login](frontend/public/Login.JPG) | ![Registration](frontend/public/Registration.JPG) |
+| Login                                | Registration                                      |
+| ------------------------------------ | ------------------------------------------------- |
+| ![Login](frontend/public/Login.JPEG) | ![Registration](frontend/public/Registration.JPG) |
 
 ### **Student Dashboard (Full Width)**
 
