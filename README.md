@@ -92,15 +92,15 @@ Backend runs on `http://localhost:5000`
 
 ### **Class Diagram**
 
-![Class Diagram](backend/StudentGradeTracker/diagrams/ClassDiagram.png)
+![Class Diagram](backend/StudentGradeTracker/Diagrams/ClassDiagram.png)
 
 ### **System Architecture Diagram**
 
-![System Architecture](backend/StudentGradeTracker/diagrams/SystemArchitecture.png)
+![System Architecture](backend/StudentGradeTracker/Diagrams/SystemArchitecture.png)
 
 ### **API Flow Diagram**
 
-![API Flow](backend/StudentGradeTracker/diagrams/APIflow.drawio.png)
+![API Flow](backend/StudentGradeTracker/Diagrams/APIflow.drawio.png)
 
 ---
 
