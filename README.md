@@ -60,7 +60,7 @@ Backend runs on `http://localhost:5000`
 
 ## Screenshots
 
-### **Authentication (Side-by-Side)**
+### **Authentication\***
 
 | Login                                           | Registration                                                  |
 | ----------------------------------------------- | ------------------------------------------------------------- |
@@ -70,7 +70,7 @@ Backend runs on `http://localhost:5000`
 
 ![Student Dashboard](frontend/public/screenshots/Student-Dashboard.JPG)
 
-### **Student Individual Assignments (Side-by-Side)**
+### **Student Individual Assignments\***
 
 | Unsubmitted                                                                                       | Submitted                                                                     | Graded                                                                             |
 | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -80,7 +80,7 @@ Backend runs on `http://localhost:5000`
 
 ![Teacher Dashboard](frontend/public/screenshots/Teacher-Dashboard.JPG)
 
-### **Teacher Individual Assignments (Side-by-Side)**
+### **Teacher Individual Assignments\***
 
 | View Assignment                                                          | Grade Assignment                                                                |
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
