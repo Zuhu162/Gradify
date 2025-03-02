@@ -74,18 +74,23 @@ namespace StudentGradeTracker.Controllers
                 return NotFound("Assignment not found or you don't have permission to delete it.");
             }
 
-            // delete all student assignments linked to this assignment
+            //  Step 1: Delete all submissions linked to this assignment
+            var relatedSubmissions = _context.Submissions.Where(s => s.AssignmentId == assignmentId);
+            _context.Submissions.RemoveRange(relatedSubmissions);
+
+            //  Delete all student assignments linked to this assignment
             var relatedStudentAssignments = _context.StudentAssignments.Where(sa => sa.AssignmentId == assignmentId);
             _context.StudentAssignments.RemoveRange(relatedStudentAssignments);
 
-            // delete the assignment itself
+            // Delete the assignment itself
             _context.Assignments.Remove(assignment);
 
-            //  Save changes to the database
+            // Save changes to the database
             _context.SaveChanges();
 
             return Ok("Assignment deleted successfully.");
         }
+
 
         //Adding Students to Assignments
 
