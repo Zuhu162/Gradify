@@ -1,8 +1,8 @@
-# Assignment Grader
+# Gradify
 
 ## Overview
 
-**Assignment Grader** is a web-based system that allows **teachers** to create assignments, track student submissions, and grade assignments efficiently. **Students** can submit their work via Google Drive or PDF links and view their grades once assigned.
+**Gradify** - is a web-based platform that simplifies assignment management and grading for teachers and students. Teachers can create assignments, track submissions, and grade efficiently, while students can submit their work via Google Drive or PDFs and view their grades seamlessly. 🚀
 
 ---
 
